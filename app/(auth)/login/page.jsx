@@ -21,31 +21,31 @@ const Page = () => {
   }, [user]);
 
   return (
-    <main className="w-full flex items-center justify-center bg-gray-100 md:p-24 p-10 min-h-screen">
-      <section className="flex flex-col gap-2 ">
-        <div className="flex justify-center ">
+    <main className="flex min-h-screen w-full items-center justify-center bg-gray-100 p-10 md:p-24">
+      <section className="flex flex-col gap-2">
+        <div className="flex justify-center">
           <img className="h-20" src="shopy.svg" alt="imagen"></img>
         </div>
-        <div className="bg-white p-10 rounded-xl shadow-md shadow-black/20 min-w-[320px] flex flex-col gap-3">
-          <h1 className="font-bold text-xl text-center ">Login with Email</h1>
-          <form className="flex flex-col gap-3 md:w-[320px] w-full">
+        <div className="flex min-w-[320px] flex-col gap-3 rounded-xl bg-white p-10 shadow-md shadow-black/20">
+          <h1 className="text-center text-xl font-bold">Login with Email</h1>
+          <form className="flex w-full flex-col gap-3 md:w-[320px]">
             <input
               type="text"
               name="email"
               id="email"
-              className="w-full px-3 p-2 border border-gray-300 rounded-md focus:outline-none"
+              className="w-full rounded-md border border-gray-300 p-2 px-3 focus:outline-none"
               placeholder="Enter Your Email"
             />
             <input
               type="password"
               name="password"
               id="password"
-              className="w-full px-3 p-2 border border-gray-300 rounded-md focus:outline-none"
+              className="w-full rounded-md border border-gray-300 p-2 px-3 focus:outline-none"
               placeholder="Enter Your Password"
             />
             <Button color="primary">Login</Button>
           </form>
-          <div className=" font-semibold flex justify-between text-indigo-600 text-sm gap-2">
+          <div className="flex justify-between gap-2 text-sm font-semibold text-indigo-600">
             <Link href="/signup">
               <button className="hover:underline">New? Create Account</button>
             </Link>
@@ -69,7 +69,6 @@ function SignInGoogle() {
     setIsLoading(true);
     try {
       const user = await signInWithPopup(auth, new GoogleAuthProvider());
-      console.log(user);
     } catch (error) {
       toast.error(error?.message || "Something went wrong");
       console.log(error);

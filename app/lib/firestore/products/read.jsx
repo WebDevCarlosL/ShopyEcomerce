@@ -3,13 +3,14 @@ import { collection, getDoc, onSnapshot, doc } from "firebase/firestore";
 import useSWRSubscription from "swr/subscription";
 import { db } from "../../firebase";
 
-export function useProducts() {
+export function useProducts({ pageLimit }) {
   const { data, error } = useSWRSubscription(
     ["products"],
     ([path], { next }) => {
       const ref = collection(db, path);
+      let q = query(ref, limit(pageLimit ?? 10));
       const unsub = onSnapshot(
-        ref,
+        q,
         (snapshot) =>
           next(
             null,

@@ -11,7 +11,12 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 
 const ListView = () => {
-  const { data: products, error, isLoading } = useProducts();
+  const [pageLimit, setPageLimit] = useState(3);
+  const {
+    data: products,
+    error,
+    isLoading,
+  } = useProducts({ pageLimit: pageLimit });
 
   console.log(products);
 
@@ -68,6 +73,27 @@ const ListView = () => {
           )}
         </tbody>
       </table>
+      <div className="flex justify-between py-3 text-sm">
+        <Button size="sm" variant="bordered">
+          Previous
+        </Button>
+        <select
+          value={pageLimit}
+          onChange={(e) => setPageLimit(e.target.value)}
+          className="rounded-xl px-5"
+          name="perpage"
+          id="perpage"
+        >
+          <option value={3}>3 items</option>
+          <option value={5}>5 items</option>
+          <option value={10}>10 items</option>
+          <option value={20}>20 items</option>
+          <option value={100}>100 items</option>
+        </select>
+        <Button size="sm" variant="bordered">
+          Next
+        </Button>
+      </div>
     </div>
   );
 };
