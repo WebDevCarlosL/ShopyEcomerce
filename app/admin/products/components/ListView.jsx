@@ -81,8 +81,8 @@ const ListView = () => {
           value={pageLimit}
           onChange={(e) => setPageLimit(e.target.value)}
           className="rounded-xl px-5"
-          name="perpage"
-          id="perpage"
+          name="pageLimit"
+          id="pageLimit"
         >
           <option value={3}>3 items</option>
           <option value={5}>5 items</option>
