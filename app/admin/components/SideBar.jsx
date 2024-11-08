@@ -1,5 +1,11 @@
 "use client";
 
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
+import { toast } from "react-toastify";
 import { auth } from "@/app/lib/firebase";
 import { signOut } from "firebase/auth";
 import {
@@ -15,11 +21,7 @@ import {
   Star,
   User,
 } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { toast } from "react-toastify";
+import Shopy from "../../../public/register2.jpg";
 
 const SideBar = () => {
   const menuList = [
@@ -103,7 +105,7 @@ const SideBar = () => {
       <section className="sticky top-0 flex h-screen w-[260px] flex-col justify-between gap-7 overflow-hidden border-r bg-white px-5 py-3">
         <div className="flex justify-center py-4">
           <Link className="cursor-pointer" href={"/"}>
-            <img src="shopy2.svg" alt="logo" className="h-12" />
+            <img src={Shopy} alt="logo" className="h-12" />
           </Link>
         </div>
         <ul className="flex flex-1 flex-col gap-3 overflow-y-scroll scrollbar-hide">

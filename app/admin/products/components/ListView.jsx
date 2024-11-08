@@ -7,18 +7,37 @@ import { deleteProduct } from "@/app/lib/firestore/products/write";
 import { Button, CircularProgress } from "@nextui-org/react";
 import { Edit2, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 const ListView = () => {
   const [pageLimit, setPageLimit] = useState(3);
-  const {
-    data: products,
-    error,
-    isLoading,
-  } = useProducts({ pageLimit: pageLimit });
+  const [searchTerm, setSearchTerm] = useState("");
+  const [islastSnapDoc, setIsLastSnapDoc] = useState([]);
+  const { data, error, isLoading, lastSnapDoc } = useProducts({
+    pageLimit: pageLimit,
 
-  console.log(products);
+    lastSnapDoc:
+      islastSnapDoc.length === 0
+        ? null
+        : islastSnapDoc[islastSnapDoc?.length - 1],
+  });
+
+  useEffect(() => {
+    setIsLastSnapDoc([]);
+  }, [pageLimit]);
+
+  const handleNextPage = () => {
+    let newStack = [...islastSnapDoc];
+    newStack.push(lastSnapDoc);
+    setIsLastSnapDoc(newStack);
+  };
+
+  const handlePrevPage = () => {
+    let newStack = [...islastSnapDoc];
+    newStack.pop(lastSnapDoc);
+    setIsLastSnapDoc(newStack);
+  };
 
   if (isLoading) {
     return (
@@ -32,49 +51,65 @@ const ListView = () => {
     return <div>{error}</div>;
   }
 
+  const filteredProducts = data?.filter((item) =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+
   return (
     <div className="flex w-full flex-1 flex-col gap-3 overflow-x-auto rounded-xl md:px-0 md:pr-5">
-      <table className="border-separate border-spacing-y-3">
-        <thead>
-          <tr>
-            <th className="rounded-l-lg border-y border-l bg-white px-3 py-2 font-semibold">
-              Sn
-            </th>
-            <th className="border-y bg-white px-3 py-2 font-semibold">
-              Imagen
-            </th>
-            <th className="border-y bg-white px-3 py-2 text-left font-semibold">
-              Titulo
-            </th>
-            <th className="border-y bg-white px-3 py-2 text-left font-semibold">
-              Precio
-            </th>
-            <th className="border-y bg-white px-3 py-2 text-left font-semibold">
-              Stock
-            </th>
-            <th className="border-y bg-white px-3 py-2 text-left font-semibold">
-              Orders
-            </th>
-            <th className="border-y bg-white px-3 py-2 text-left font-semibold">
-              Status
-            </th>
-            <th className="rounded-r-lg border-y border-r bg-white px-3 py-2 font-semibold">
-              Acciones
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {products?.length === 0 ? (
-            <h2 className="text-center font-bold">No hay Productos</h2>
-          ) : (
-            products?.map((item, index) => (
-              <Row key={item?.id} item={item} index={index} />
-            ))
-          )}
-        </tbody>
-      </table>
+      {data?.length === undefined ? (
+        <p className="text-center font-bold text-red-700">No hay productos</p>
+      ) : (
+        <>
+          <table className="border-separate border-spacing-y-3">
+            <thead>
+              <tr>
+                <th className="rounded-l-lg border-y border-l bg-white px-3 py-2 font-semibold">
+                  Sn
+                </th>
+                <th className="border-y bg-white px-3 py-2 font-semibold">
+                  Imagen
+                </th>
+                <th className="border-y bg-white px-3 py-2 text-left font-semibold">
+                  Titulo
+                </th>
+                <th className="border-y bg-white px-3 py-2 text-left font-semibold">
+                  Precio
+                </th>
+                <th className="border-y bg-white px-3 py-2 text-left font-semibold">
+                  Stock
+                </th>
+                <th className="border-y bg-white px-3 py-2 text-left font-semibold">
+                  Orders
+                </th>
+                <th className="border-y bg-white px-3 py-2 text-left font-semibold">
+                  Status
+                </th>
+                <th className="rounded-r-lg border-y border-r bg-white px-3 py-2 font-semibold">
+                  Acciones
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {data?.map((item, index) => (
+                <Row
+                  key={item?.id}
+                  item={item}
+                  index={index + islastSnapDoc.length * pageLimit}
+                />
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
+
       <div className="flex justify-between py-3 text-sm">
-        <Button size="sm" variant="bordered">
+        <Button
+          isDisabled={isLoading || data?.length === 0}
+          onClick={handlePrevPage}
+          size="sm"
+          variant="bordered"
+        >
           Previous
         </Button>
         <select
@@ -90,7 +125,12 @@ const ListView = () => {
           <option value={20}>20 items</option>
           <option value={100}>100 items</option>
         </select>
-        <Button size="sm" variant="bordered">
+        <Button
+          isDisabled={isLoading || data?.length === undefined}
+          onClick={handleNextPage}
+          size="sm"
+          variant="bordered"
+        >
           Next
         </Button>
       </div>
@@ -178,7 +218,6 @@ function Row({ item, index }) {
             </Button>
             <Button
               onClick={() => setIsModalOpen(true)}
-              // onClick={handleDelete}
               isDisabled={isDeleting}
               isLoading={isDeleting}
               isIconOnly
