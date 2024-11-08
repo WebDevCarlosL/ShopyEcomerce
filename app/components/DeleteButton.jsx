@@ -1,13 +1,13 @@
 import React from "react";
 
-const DeleteButton = ({ isOpen, onClose, onConfirm }) => {
+const DeleteButton = ({ isOpen, onClose, onConfirm, label }) => {
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-5">
       <div className="rounded-lg bg-white p-5">
         <h2 className="text-center text-lg font-bold">
-          ¿Estás seguro de que deseas eliminar la categoría?
+          {`¿Estás seguro de que deseas eliminar ${label}?`}
         </h2>
         <div className="mt-4 flex justify-center">
           <button

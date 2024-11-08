@@ -185,10 +185,10 @@ function Row({ item, index }) {
           {item?.saleprice < item?.price && (
             <span className="text-xs text-gray-500 line-through">
               ${item?.price}
+              {""}
             </span>
           )}
-          {""}
-          {""}${item?.saleprice}
+          ${item?.saleprice}
         </td>
         <td className="border-y bg-white px-3 py-2">{item?.stock}</td>
         <td className="border-y bg-white px-3 py-2">{item?.orders ?? 0}</td>
@@ -234,6 +234,7 @@ function Row({ item, index }) {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={handleDelete}
+        label={"el producto"}
       />
     </>
   );

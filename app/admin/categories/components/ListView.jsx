@@ -126,6 +126,7 @@ function Row({ item, index }) {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={handleDelete}
+        label={"la categoria"}
       />
     </>
   );
