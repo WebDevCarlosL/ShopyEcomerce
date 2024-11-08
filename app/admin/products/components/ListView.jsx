@@ -160,7 +160,7 @@ function Row({ item, index }) {
   };
 
   const handleUpdate = () => {
-    router.push(`/admin/products?id=${item?.id}`);
+    router.push(`/admin/products/form?id=${item?.id}`);
   };
 
   return (
