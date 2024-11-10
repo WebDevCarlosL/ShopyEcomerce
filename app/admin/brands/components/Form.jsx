@@ -16,7 +16,7 @@ import { toast } from "react-toastify";
 
 const Form = () => {
   const [image, setImage] = useState(null);
-  const [publicId, setPublicId] = useState(null);
+
   const imageInputRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const [existingImage, setExistingImage] = useState("");
@@ -58,18 +58,17 @@ const Form = () => {
       setIsLoading(false);
     }
 
-    if (brand.trim() === "") {
+    if (!brand) {
       toast.error("Por favor, rellene el campo marca.");
       setIsLoading(false);
     }
 
     try {
-      const { imageUrl, publicId } = await uploadImageToCloudinary(image);
+      const imageUrl = await uploadImageToCloudinary(image);
 
       await createNewBrand({
         brand: brand,
         image: imageUrl,
-        publicId,
       });
       toast.success("Marca creada con exito");
 
@@ -106,13 +105,14 @@ const Form = () => {
     if (!imageUrl) {
       setIsLoading(false);
       toast.error("Por favor, coloque una imagen imagen.");
+      return;
     }
 
     try {
       if (image) {
-        const { imageUrl: newImageUrl, publicId } =
-          await uploadImageToCloudinary(image);
-        setPublicId(publicId);
+        const publicId = await extractPublicId(existingImage);
+        await DeleteImagenCloudinary(publicId);
+        const newImageUrl = await uploadImageToCloudinary(image);
         imageUrl = newImageUrl;
       }
 
@@ -120,7 +120,6 @@ const Form = () => {
         id,
         brand,
         image: imageUrl,
-        publicId,
       });
       toast.success("Marca actualizada con exito");
       setBrand("");
@@ -140,6 +139,14 @@ const Form = () => {
   const handleImageChange = (e) => {
     if (e.target.files.length > 0) {
       setImage(e.target.files[0]);
+    }
+  };
+
+  const handleCancel = () => {
+    setBrand("");
+    setImage(null);
+    if (imageInputRef.current) {
+      imageInputRef.current.value = "";
     }
   };
 
@@ -207,6 +214,14 @@ const Form = () => {
               : id
                 ? "Actualizar Marca"
                 : "Crear Marca"}
+          </Button>
+          <Button
+            isLoading={isLoading}
+            isdisabled={isLoading}
+            type="button"
+            onClick={handleCancel}
+          >
+            Cancelar
           </Button>
         </div>
       </form>

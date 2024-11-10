@@ -14,11 +14,15 @@ import {
 } from "@/app/lib/firestore/categories/write";
 
 import { getCategory } from "@/app/lib/firestore/categories/read";
-import { uploadImageToCloudinary } from "../../../helpers/Cloudinary";
+import {
+  deleteImageFromCloudinary,
+  extractPublicId,
+  uploadImageToCloudinary,
+} from "../../../helpers/Cloudinary";
+import { DeleteImagenCloudinary } from "@/app/helpers/DeleteCloudinary";
 
 const Form = () => {
   const [image, setImage] = useState(null);
-  const [publicId, setPublicId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [category, setCategory] = useState("");
   const [slug, setSlug] = useState("");
@@ -77,14 +81,12 @@ const Form = () => {
     }
 
     try {
-      const { imageUrl, publicId } = await uploadImageToCloudinary(image);
+      const imageUrl = await uploadImageToCloudinary(image);
 
-      // const imageUrl = response.data.secure_url;
       await createNewCategory({
         category: category,
         slug: slug,
         image: imageUrl,
-        publicId,
       });
       toast.success("Categoria creada con exito");
 
@@ -131,12 +133,9 @@ const Form = () => {
 
     try {
       if (image) {
-        // const publiId = await extractPublicId(existingImage);
-        // console.log(publiId);
-        // await deleteImageFromCloudinary(publiId);
-        const { imageUrl: newImageUrl, publicId } =
-          await uploadImageToCloudinary(image);
-        setPublicId(publicId);
+        const publicId = await extractPublicId(existingImage);
+        await DeleteImagenCloudinary(publicId);
+        const newImageUrl = await uploadImageToCloudinary(image);
         imageUrl = newImageUrl;
       }
       await updateCategory({
@@ -144,7 +143,6 @@ const Form = () => {
         slug,
         category,
         image: imageUrl,
-        publicId,
       });
       toast.success("Categoria actualizada con exito");
       setCategory("");
@@ -165,6 +163,16 @@ const Form = () => {
   const handleImageChange = (e) => {
     if (e.target.files.length > 0) {
       setImage(e.target.files[0]);
+    }
+  };
+
+  const handleCancel = () => {
+    setSlug("");
+    setCategory("");
+    setExistingImage("");
+    setImage(null);
+    if (imageInputRef.current) {
+      imageInputRef.current.value = "";
     }
   };
 
@@ -244,6 +252,14 @@ const Form = () => {
               : id
                 ? "Actualizar Categoria"
                 : "Crear Categoria"}
+          </Button>
+          <Button
+            isLoading={isLoading}
+            isdisabled={isLoading}
+            type="button"
+            onClick={handleCancel}
+          >
+            Cancelar
           </Button>
         </div>
       </form>

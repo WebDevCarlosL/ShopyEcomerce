@@ -109,3 +109,25 @@ export const getProducts = async ({ id }) => {
     return null;
   }
 };
+
+export function useProduct({ productId }) {
+  const { data, error } = useSWRSubscription(
+    ["products", productId],
+    ([path, productId], { next }) => {
+      const ref = doc(db, `${path}/${productId}`);
+
+      const unsub = onSnapshot(
+        ref,
+        (snapshot) => next(null, snapshot.data()),
+        (err) => next(err, null),
+      );
+      return () => unsub();
+    },
+  );
+
+  return {
+    data: data,
+    error: error?.message,
+    isLoading: !data && !error,
+  };
+}

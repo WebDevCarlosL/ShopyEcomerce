@@ -1,10 +1,12 @@
 "use client";
 
 import DeleteButton from "@/app/components/DeleteButton";
+import { extractPublicId } from "@/app/helpers/Cloudinary";
+import { DeleteImagenCloudinary } from "@/app/helpers/DeleteCloudinary";
 import { useCategories } from "@/app/lib/firestore/categories/read";
 import { deleteCategory } from "@/app/lib/firestore/categories/write";
 import { Button, CircularProgress } from "@nextui-org/react";
-import { Edit2, Router, Trash, Trash2 } from "lucide-react";
+import { Edit2, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -68,6 +70,8 @@ function Row({ item, index }) {
 
     try {
       setIsDeleting(true);
+      const publicId = await extractPublicId(item?.image);
+      await DeleteImagenCloudinary(publicId);
       await deleteCategory({ id: item?.id });
       toast.success("Categoria Eliminada");
     } catch (error) {

@@ -1,10 +1,13 @@
 "use client";
 
 import DeleteButton from "@/app/components/DeleteButton";
-import { extractPublicId } from "@/app/helpers/Cloudinary";
+import {
+  extractPublicId,
+  uploadImageToCloudinary,
+} from "@/app/helpers/Cloudinary";
 import { DeleteImagenCloudinary } from "@/app/helpers/DeleteCloudinary";
-import { useBrands } from "@/app/lib/firestore/brands/read";
-import { deleteBrand } from "@/app/lib/firestore/brands/write";
+import { useCollections } from "@/app/lib/firestore/collections/read";
+import { deleteCollections } from "@/app/lib/firestore/collections/write";
 import { Button, CircularProgress } from "@nextui-org/react";
 import { Edit2, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -12,7 +15,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 
 const ListView = () => {
-  const { data, error, isLoading } = useBrands();
+  const { data, error, isLoading } = useCollections();
 
   if (isLoading) {
     return (
@@ -28,7 +31,7 @@ const ListView = () => {
 
   return (
     <div className="flex flex-1 flex-col gap-3 rounded-xl md:px-0 md:pr-5">
-      <h1 className="text-xl">Lista de Marcas</h1>
+      <h1 className="text-xl">Lista de Colecciones</h1>
       <table className="border-separate border-spacing-y-3">
         <thead>
           <tr>
@@ -37,7 +40,7 @@ const ListView = () => {
             </th>
             <th className="border-y bg-white px-3 py-2 font-semibold">Image</th>
             <th className="border-y bg-white px-3 py-2 text-left font-semibold">
-              Name
+              Title
             </th>
             <th className="rounded-r-lg border-y border-r bg-white px-3 py-2 text-center font-semibold">
               Actions
@@ -46,7 +49,7 @@ const ListView = () => {
         </thead>
         <tbody>
           {data?.length === 0 ? (
-            <h1>No hay Marcas</h1>
+            <h1>No hay Colecciones</h1>
           ) : (
             data?.map((item, index) => (
               <Row key={item?.id} item={item} index={index} />
@@ -66,14 +69,13 @@ function Row({ item, index }) {
   const router = useRouter();
 
   const handleDelete = async () => {
-    setIsDeleting(false);
+    setIsDeleting(true);
 
     try {
-      setIsDeleting(true);
       const publicId = await extractPublicId(item?.image);
       await DeleteImagenCloudinary(publicId);
-      await deleteBrand({ id: item?.id });
-      toast.success("Marca Eliminada");
+      await deleteCollections({ id: item?.id });
+      toast.success("Coleccion Eliminada");
     } catch (error) {
       toast.error(error?.message);
     } finally {
@@ -82,7 +84,7 @@ function Row({ item, index }) {
   };
 
   const handleUpdate = () => {
-    router.push(`/admin/brands?id=${item?.id}`);
+    router.push(`/admin/collections?id=${item?.id}`);
   };
 
   return (
@@ -113,6 +115,7 @@ function Row({ item, index }) {
             </Button>
             <Button
               onClick={() => setIsModalOpen(true)}
+              // onClick={handleDelete}
               isDisabled={isDeleting}
               isLoading={isDeleting}
               isIconOnly
@@ -129,7 +132,7 @@ function Row({ item, index }) {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={handleDelete}
-        label={"la marca"}
+        label={"la categoria"}
       />
     </>
   );

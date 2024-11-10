@@ -23,6 +23,8 @@ const ListView = () => {
         : islastSnapDoc[islastSnapDoc?.length - 1],
   });
 
+  console.log(data);
+
   useEffect(() => {
     setIsLastSnapDoc([]);
   }, [pageLimit]);
@@ -173,7 +175,7 @@ function Row({ item, index }) {
           <div className="flex items-center justify-center">
             <img
               className="h-10 w-10 object-cover"
-              src={item?.image?.imageUrl}
+              src={item?.image}
               alt={item?.name || "image"}
             />
           </div>

@@ -11,30 +11,9 @@ import {
 import { db, storage } from "../../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
-const createNewCategory = async ({ slug, category, image, publicId }) => {
-  // if (!image) {
-  //   throw new Error("Debes de colocar una imagen");
-  // }
-
-  // if (!image.trim() === "") {
-  //   throw new Error("Debes de colocar una imagen");
-  // }
-
-  // if (!data?.name) {
-  //   throw new Error("Debes de colocar un nombre");
-  // }
-  // if (!data?.slug) {
-  //   throw new Error("Debes de colocar un slug");
-  // }
-
+const createNewCategory = async ({ slug, category, image }) => {
   const newId = doc(collection(db, "ids")).id;
-  // const imageRef = ref(storage, `categories/${newId}`);
-  // await uploadBytes(imageRef, image);
-  // const imageURL = await getDownloadURL(imageRef);
-
   await setDoc(doc(db, `categories/${newId}`), {
-    // ...data,
-    publicId,
     slug,
     name: category,
     id: newId,
@@ -50,14 +29,13 @@ const deleteCategory = async ({ id }) => {
   await deleteDoc(doc(db, `categories/${id}`));
 };
 
-const updateCategory = async ({ id, slug, category, image, publicId }) => {
+const updateCategory = async ({ id, slug, category, image }) => {
   await updateDoc(doc(db, `categories/${id}`), {
     id,
     slug,
     name: category,
     image,
     timestampUpdated: Timestamp.now(),
-    publicId,
   });
 };
 

@@ -10,7 +10,7 @@ const Input = ({
   onChange,
 }) => {
   return (
-    <div className="relative mb-6">
+    <div className="z-1 relative mb-6">
       <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
         {Icon}
       </div>
