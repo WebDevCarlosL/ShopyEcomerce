@@ -190,7 +190,7 @@ const Form = () => {
 
         <div className="flex flex-col gap-1">
           <label className="text-sm text-gray-500" htmlFor="brand">
-            Nombre <span className="text-red-500">*</span>
+            Titulo <span className="text-red-500">*</span>
           </label>
           <Input
             value={brand}

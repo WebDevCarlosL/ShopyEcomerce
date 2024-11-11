@@ -40,7 +40,7 @@ const ListView = () => {
             </th>
             <th className="border-y bg-white px-3 py-2 font-semibold">Image</th>
             <th className="border-y bg-white px-3 py-2 text-left font-semibold">
-              Title
+              Titulo
             </th>
             <th className="rounded-r-lg border-y border-r bg-white px-3 py-2 text-center font-semibold">
               Actions

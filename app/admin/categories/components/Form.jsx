@@ -174,6 +174,7 @@ const Form = () => {
     if (imageInputRef.current) {
       imageInputRef.current.value = "";
     }
+    router.push("/admin/categories");
   };
 
   return (

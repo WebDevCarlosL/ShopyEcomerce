@@ -44,8 +44,10 @@ const AdminLayout = ({ children }) => {
         <SideBar />
       </div>
 
-      <section className="relative z-50 flex min-h-screen flex-1 flex-col overflow-hidden">
-        <Header toggleSideBar={toggleSideBar} />
+      <section className="relative flex min-h-screen flex-1 flex-col overflow-hidden">
+        <div className="z-50">
+          <Header toggleSideBar={toggleSideBar} />
+        </div>
         <section className="flex-1 bg-[#eff3f4] pt-14">{children}</section>
       </section>
     </main>

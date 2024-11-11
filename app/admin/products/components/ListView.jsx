@@ -23,8 +23,6 @@ const ListView = () => {
         : islastSnapDoc[islastSnapDoc?.length - 1],
   });
 
-  console.log(data);
-
   useEffect(() => {
     setIsLastSnapDoc([]);
   }, [pageLimit]);
@@ -152,6 +150,8 @@ function Row({ item, index }) {
 
     try {
       setIsDeleting(true);
+      const publicId = await extractPublicId(item?.image);
+      await DeleteImagenCloudinary(publicId);
       await deleteProduct({ id: item?.id });
       toast.success("Producto Eliminado");
     } catch (error) {

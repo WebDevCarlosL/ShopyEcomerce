@@ -20,8 +20,6 @@ export const uploadImageToCloudinary = async (file) => {
       formData,
     );
 
-    console.log(response);
-
     if (!response.data.secure_url) {
       throw new Error("Error al obtener la URL de la imagen.");
     }

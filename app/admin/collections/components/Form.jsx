@@ -65,7 +65,6 @@ const Form = () => {
     });
   };
 
-  console.log(data);
   console.log(image);
 
   const handleImageChange = (e) => {
@@ -75,11 +74,30 @@ const Form = () => {
   };
 
   const handleCreate = async () => {
+    if (!image) {
+      toast.error("Ingrese una imagen destacada");
+      return;
+    }
+
+    if (!data?.name) {
+      toast.error("Ingrese el titulo de la coleccion");
+      return;
+    }
+
+    if (!data?.subTitle) {
+      toast.error("Ingrese el subtitulo de la coleccion");
+      return;
+    }
+
+    if (!data?.products || data?.products.length === 0) {
+      toast.error("Ingrese al menos un producto a la coleccion");
+      return;
+    }
     setIsLoading(true);
     try {
       const imageUrl = await uploadImageToCloudinary(image);
       await createNewCollections({
-        data: data,
+        data,
         image: imageUrl,
       });
       toast.success("Producto Guardado");
@@ -125,7 +143,7 @@ const Form = () => {
       }
       await updateCollections({
         id,
-        data: data,
+        data,
         image: imageUrl,
       });
       toast.success("Colecciones Actualizada");
@@ -192,7 +210,7 @@ const Form = () => {
         </div>
 
         <div className="flex flex-col gap-1">
-          <label className="text-sm text-gray-500" htmlFor="name">
+          <label className="text-sm text-gray-500" htmlFor="title">
             Titulo <span className="text-red-500">*</span>
           </label>
           <Input
@@ -203,7 +221,7 @@ const Form = () => {
             type={"text"}
             name={"name"}
             id={"name"}
-            placeholder={"Nombre de la coleccion"}
+            placeholder={"Titulo de la coleccion"}
             icon={<Layers3 className="h-5 w-5" />}
           />
         </div>
@@ -225,7 +243,7 @@ const Form = () => {
           />
         </div>
 
-        <div className="flex flex-wrap gap-3">
+        <div className="flex flex-wrap gap-1">
           {data?.products?.map((productId) => {
             return (
               <ProductCard
@@ -237,12 +255,14 @@ const Form = () => {
           })}
         </div>
 
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-3">
           <label className="text-sm text-gray-500" htmlFor="select">
             Seleccionar Productos <span className="text-red-500">*</span>
           </label>
           <select
+            className="mb-3"
             onChange={(e) => {
+              e.preventDefault();
               setData((prevData) => {
                 let list = [...(prevData?.products ?? [])];
                 list.push(e.target.value);
