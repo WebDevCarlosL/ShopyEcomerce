@@ -10,9 +10,13 @@ import Input from "../../../components/Input";
 
 import { createNewAdmin, updateAdmin } from "@/app/lib/firestore/admins/write";
 import { getAdmins } from "@/app/lib/firestore/admins/read";
-import { uploadImageToCloudinary } from "../../../helpers/Cloudinary";
+import {
+  extractPublicId,
+  uploadImageToCloudinary,
+} from "../../../helpers/Cloudinary";
 
 import { toast } from "react-toastify";
+import { DeleteImagenCloudinary } from "@/app/helpers/DeleteCloudinary";
 
 const Form = () => {
   const [image, setImage] = useState(null);
@@ -56,17 +60,17 @@ const Form = () => {
 
     if (!image) {
       toast.error("Por favor, selecciona una imagen antes de continuar.");
-      setIsLoading(false);
+      return;
     }
 
     if (nameAdmin.trim() === "") {
       toast.error("Por favor, rellene el campo Nombre.");
-      setIsLoading(false);
+      return;
     }
 
     if (emailAdmin.trim() === "") {
       toast.error("Por favor, rellene el campo email.");
-      setIsLoading(false);
+      return;
     }
 
     try {
@@ -94,11 +98,9 @@ const Form = () => {
   };
 
   const handleUpdate = async (e) => {
-    setIsLoading(true);
-
     if (!id) {
       toast.error("Debes de colocar un id");
-      setIsLoading(false);
+
       return;
     }
 
@@ -110,7 +112,7 @@ const Form = () => {
 
     if (!emailAdmin) {
       toast.error("Por favor, rellene el campo email.");
-      setIsLoading(false);
+
       return;
     }
 
@@ -118,14 +120,15 @@ const Form = () => {
 
     if (!imageUrl) {
       setIsLoading(false);
-      toast.error("Por favor, coloque una imagen.");
+      toast.error("Por favor, coloque una imagen imagen.");
+      return;
     }
 
     try {
+      setIsLoading(true);
       if (image) {
-        const { imageUrl: newImageUrl, publicId } =
-          await uploadImageToCloudinary(image);
-
+        await DeleteImagenCloudinary(publicId);
+        const newImageUrl = await uploadImageToCloudinary(image);
         imageUrl = newImageUrl;
       }
 

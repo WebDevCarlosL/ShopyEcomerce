@@ -12,7 +12,6 @@ import {
   BookCopy,
   Cat,
   Glasses,
-  Layers3,
   LayoutDashboard,
   LogOut,
   PackageOpen,
@@ -21,7 +20,6 @@ import {
   Star,
   User,
 } from "lucide-react";
-import Shopy from "../../../public/register2.jpg";
 
 const SideBar = () => {
   const menuList = [
@@ -105,7 +103,7 @@ const SideBar = () => {
       <section className="sticky top-0 flex h-screen w-[260px] flex-col justify-between gap-7 overflow-hidden border-r bg-white px-5 py-3">
         <div className="flex justify-center py-4">
           <Link className="cursor-pointer" href={"/"}>
-            <img src={Shopy} alt="logo" className="h-12" />
+            <img src={"./shopy.svg"} alt="logo" className="h-12" />
           </Link>
         </div>
         <ul className="flex flex-1 flex-col gap-3 overflow-y-scroll scrollbar-hide">

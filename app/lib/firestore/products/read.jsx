@@ -1,4 +1,3 @@
-"use client";
 import {
   collection,
   getDoc,
@@ -8,6 +7,7 @@ import {
   limit,
   where,
   startAfter,
+  getDocs,
 } from "firebase/firestore";
 import useSWRSubscription from "swr/subscription";
 import { db } from "../../firebase";

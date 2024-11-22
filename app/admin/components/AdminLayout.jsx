@@ -3,12 +3,20 @@ import React, { useEffect, useRef, useState } from "react";
 import SideBar from "./SideBar";
 import Header from "./Header";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/app/context/AuthContext";
+import { useAdmin } from "../../lib/firestore/admins/read";
+
+import { CircularProgress } from "@nextui-org/react";
+import { signOut } from "firebase/auth";
+import { auth } from "@/app/lib/firebase";
 
 const AdminLayout = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const sideBarRef = useRef(null);
-
   const pathname = usePathname();
+
+  const { user } = useAuth();
+  const { data: admin, error, isLoading } = useAdmin({ email: user?.email });
 
   useEffect(() => {
     toggleSideBar();
@@ -29,6 +37,37 @@ const AdminLayout = ({ children }) => {
   const toggleSideBar = () => {
     setIsOpen(!isOpen);
   };
+
+  if (isLoading)
+    return (
+      <div className="flex h-screen w-screen items-center justify-center">
+        <CircularProgress />
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="flex h-screen w-screen items-center justify-center">
+        <h1 className="text-red-500">{error}</h1>
+      </div>
+    );
+
+  if (!admin)
+    return (
+      <div className="flex h-screen w-screen flex-col items-center justify-center gap-2">
+        <h1 className="font-bold">No eres un admin...</h1>
+
+        <h2 className="text-sm text-gray-600">{user?.email}</h2>
+        <button
+          onClick={async () => {
+            await signOut(auth);
+          }}
+          className="rounded-md bg-black px-2 py-2 text-white"
+        >
+          Logout
+        </button>
+      </div>
+    );
 
   return (
     <main className="relative flex">

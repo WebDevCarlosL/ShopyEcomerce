@@ -1,5 +1,13 @@
 "use client";
-import { collection, getDoc, onSnapshot, doc } from "firebase/firestore";
+import {
+  collection,
+  getDoc,
+  onSnapshot,
+  doc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import useSWRSubscription from "swr/subscription";
 import { db } from "../../firebase";
 
@@ -32,5 +40,17 @@ export const getCollections = async ({ id }) => {
     return data.data();
   } else {
     return null;
+  }
+};
+
+export const getCollectionsSlider = async () => {
+  try {
+    const list = await getDocs(
+      query(collection(db, "products"), where("isFeatured", "==", true)),
+    );
+    return list.docs.map((snap) => snap.data());
+  } catch (error) {
+    console.error("Error fetching collections:", error);
+    return [];
   }
 };

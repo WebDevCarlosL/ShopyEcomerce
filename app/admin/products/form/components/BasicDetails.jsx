@@ -54,7 +54,7 @@ const BasicDetails = ({ data, handleData }) => {
           className="w-full rounded-lg border px-4 py-2 outline-none"
           required
         >
-          <option value={""}>Seleeccione una Marca</option>
+          <option value={""}>Seleccione una Marca</option>
           {brands?.map((brand) => (
             <option key={brand.id} value={brand.id}>
               {brand.name}
@@ -78,7 +78,7 @@ const BasicDetails = ({ data, handleData }) => {
           className="w-full rounded-lg border px-4 py-2 outline-none"
           required
         >
-          <option value={""}>Seleeccione una Categoria</option>
+          <option value={""}>Seleccione una Categoria</option>
           {categories?.map((category) => (
             <option key={category.id} value={category.id}>
               {category.name}
@@ -126,6 +126,28 @@ const BasicDetails = ({ data, handleData }) => {
         htmlfor="saleprice"
         icon={<Receipt className="h-5 w-5" />}
       />
+
+      <div className="mt-2 flex flex-col gap-1">
+        <label className="text-xs text-gray-500" htmlFor="isFeatured">
+          "Is Featured Product"
+          <span className="text-red-500">*</span>
+        </label>
+        <div className="relative mb-2">
+          <select
+            value={data?.isFeatured ? "yes" : "no"}
+            onChange={(e) =>
+              handleData("isFeatured", e.target.value === "yes" ? true : false)
+            }
+            type={"text"}
+            name={"isFeatured"}
+            id={"isFeatured"}
+            className="w-full rounded-lg border py-2 outline-none"
+          >
+            <option value={"no"}>No</option>
+            <option value={"yes"}>Yes</option>
+          </select>
+        </div>
+      </div>
     </section>
   );
 };

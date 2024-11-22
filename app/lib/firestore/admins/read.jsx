@@ -31,3 +31,20 @@ export const getAdmins = async ({ id }) => {
     return null;
   }
 };
+
+export function useAdmin({ email }) {
+  const { data, error } = useSWRSubscription(
+    ["admins", email],
+    ([path, email], { next }) => {
+      const ref = doc(db, `admins/${email}`);
+      const unsub = onSnapshot(
+        ref,
+        (snapshot) => next(null, snapshot.exists() ? snapshot.data() : null),
+        (err) => next(err, null),
+      );
+      return () => unsub();
+    },
+  );
+
+  return { data, error: error?.meesage, isLoading: data === undefined };
+}

@@ -1,6 +1,8 @@
 "use client";
 
 import DeleteButton from "@/app/components/DeleteButton";
+import { extractPublicId } from "@/app/helpers/Cloudinary";
+import { DeleteImagenCloudinary } from "@/app/helpers/DeleteCloudinary";
 import { useProducts } from "@/app/lib/firestore/products/read";
 import { deleteProduct } from "@/app/lib/firestore/products/write";
 
@@ -171,6 +173,7 @@ function Row({ item, index }) {
         <td className="rounded-l-lg border-y border-l bg-white px-3 py-2 text-center">
           {index + 1}
         </td>
+
         <td className="border-y bg-white px-3 py-2">
           <div className="flex items-center justify-center">
             <img
@@ -181,7 +184,12 @@ function Row({ item, index }) {
           </div>
         </td>
         <td className="whitespace-nowrap border-y bg-white px-3 py-2">
-          {item?.name}
+          {item?.name}{" "}
+          {item?.isFeatured === true && (
+            <span className="ml-2 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-400 px-2 py-1 text-[10px] text-white">
+              Featured
+            </span>
+          )}
         </td>
         <td className="whitespace-nowrap border-y bg-white px-3 py-2">
           {item?.saleprice < item?.price && (

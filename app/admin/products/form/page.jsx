@@ -10,10 +10,14 @@ import {
   createNewProduct,
   updateProduct,
 } from "@/app/lib/firestore/products/write";
-import { CircularProgress } from "@nextui-org/react";
+import { Button, CircularProgress } from "@nextui-org/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getProducts } from "@/app/lib/firestore/products/read";
-import { uploadImageToCloudinary } from "@/app/helpers/Cloudinary";
+import {
+  extractPublicId,
+  uploadImageToCloudinary,
+} from "@/app/helpers/Cloudinary";
+import { DeleteImagenCloudinary } from "@/app/helpers/DeleteCloudinary";
 
 const Page = () => {
   const [data, setData] = useState(null);
@@ -203,25 +207,27 @@ const Page = () => {
         <h1 className="font-semibold">
           {id ? "Actualizar" : "Crear"} Producto
         </h1>
-        <button
-          className="curso-pointer flex items-center gap-2 rounded-lg bg-[#313131] px-4 py-2 text-sm text-white transition-all duration-300 ease-soft-spring hover:bg-white hover:text-black hover:shadow-lg hover:shadow-black/20"
-          disabled={loading}
-        >
-          {loading ? <CircularProgress /> : <Save />}
-          {loading ? "Guardando..." : id ? "Actualizar" : "Guardar"}
-        </button>
-        {id && (
-          <Button
-            isLoading={loading}
-            isdisabled={loading}
-            type="button"
-            onClick={() => {
-              router.push("/admin/products");
-            }}
+        <div className="flex gap-2">
+          <button
+            className="curso-pointer flex items-center gap-2 rounded-lg bg-[#313131] px-4 py-2 text-sm text-white transition-all duration-300 ease-soft-spring hover:bg-white hover:text-black hover:shadow-lg hover:shadow-black/20"
+            disabled={loading}
           >
-            Cancelar
-          </Button>
-        )}
+            {loading ? <CircularProgress /> : <Save />}
+            {loading ? "Guardando..." : id ? "Actualizar" : "Guardar"}
+          </button>
+          {id && (
+            <Button
+              isLoading={loading}
+              isdisabled={loading}
+              type="button"
+              onClick={() => {
+                router.push("/admin/products");
+              }}
+            >
+              Cancelar
+            </Button>
+          )}
+        </div>
       </div>
       <div className="flex flex-col gap-5 md:flex-row">
         <div className="flex flex-1 flex-col gap-3">

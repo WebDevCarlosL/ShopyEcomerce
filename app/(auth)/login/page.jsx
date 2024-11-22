@@ -15,7 +15,7 @@ const Page = () => {
 
   useEffect(() => {
     if (user) {
-      router.push("/dashboard");
+      router.push("/account");
       toast.success("Login Successful");
     }
   }, [user]);
